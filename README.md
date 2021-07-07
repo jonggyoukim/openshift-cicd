@@ -1,6 +1,6 @@
 # OpenShift CI/CD
 
-<div align=right><hr style="border:2px solid gray; width:30%;"/></div>
+<div align=left><hr style="border:2px solid gray; width:30%;"/></div>
 
 &nbsp;
 
