@@ -367,7 +367,7 @@ demo-app   demo-app-developer-advocate.apps.ocp4.cloud.com          demo-app   8
 동일한 Pod을 접근할 수 있음을 알 수 있습니다.
 
 
-## External IP 로 접근
+### External IP 로 접근
 
 LoadBalancer에서 제공하는 External IP로 Service를 접근 가능합니다.
 이는 yaml 파일에서 `type: LoadBalancer` 로 정의하면 됩니다.
