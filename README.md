@@ -1,6 +1,6 @@
 # OpenShift CI/CD Pipeline
 
-<hr width="420px;" size="10" align="left">
+<hr width="415px;" size="10" align="left">
 
 &nbsp;
 
