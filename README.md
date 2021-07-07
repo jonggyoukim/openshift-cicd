@@ -1,4 +1,5 @@
-# openshift-cicd
+# OpenShift CI/CD
+
 
 ## 애플리케이션 컨테이너화
 
@@ -8,8 +9,13 @@
 
 ## CI/CD Pipeline
 
-- [Jenkins를 이용한 배포]
+- Jenkins를 이용한 배포
 - OpenShift에서 배포
-    - [소스에서 배포하기]
-    - [이미지를 배포하기]
-    - []
+    - 소스에서 배포하기
+    - 이미지에서 배포하기
+    - Jenkins를 이용하여 배포하기
+- OpenShift Pipelie
+    - Resource
+    - Task
+    - Pipeline
+- OpenShift GitOps
