@@ -1,6 +1,6 @@
 # OpenShift CI/CD
 
-<hr width="300px;" size="10" align="left">
+<hr width="250px;" size="10" align="left">
 
 &nbsp;
 
