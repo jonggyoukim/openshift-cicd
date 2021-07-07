@@ -304,81 +304,15 @@ Forwarding from [::1]:8080 -> 8080
 
 ![](./images/kubernetes-member-app.png)
 
+현재 IP가 10.131.0.143으로 나오는데, 이는 Pod가 부여받은 IP를 나타내고 있습니다.
 
-~~~
-kubectl describe pod demo-app-5c74fc466f-4jhmr
-Name:         demo-app-5c74fc466f-4jhmr
-Namespace:    developer-advocate
-Priority:     0
-Node:         worker2.ocp4.cloud.com/10.76.168.67
-Start Time:   Wed, 07 Jul 2021 23:18:28 +0900
-Labels:       app=demo-app
-              pod-template-hash=5c74fc466f
-Annotations:  k8s.v1.cni.cncf.io/network-status:
-                [{
-                    "name": "",
-                    "interface": "eth0",
-                    "ips": [
-                        "10.131.0.143"
-                    ],
-                    "default": true,
-                    "dns": {}
-                }]
-              k8s.v1.cni.cncf.io/networks-status:
-                [{
-                    "name": "",
-                    "interface": "eth0",
-                    "ips": [
-                        "10.131.0.143"
-                    ],
-                    "default": true,
-                    "dns": {}
-                }]
-              openshift.io/scc: restricted
-Status:       Running
+실제 Pod의 IP를 살펴보려면 다음과 같이 확인 할 수 있습니다.
+~~~sh
+$ kubectl describe pod demo-app-5c74fc466f-4jhmr | grep IP
+
 IP:           10.131.0.143
 IPs:
-  IP:           10.131.0.143
-Controlled By:  ReplicaSet/demo-app-5c74fc466f
-Containers:
-  demo-app:
-    Container ID:   cri-o://5d80e616a37c6a4c557de96a79df1b2d2d5731962adec7358295f96c615c5cc7
-    Image:          jonggyoukim/member-app
-    Image ID:       docker.io/jonggyoukim/member-app@sha256:e110f145b2fedc0f2bb5960032c67f61c3c10da0780b465bb2135f4836e5a2df
-    Port:           8080/TCP
-    Host Port:      0/TCP
-    State:          Running
-      Started:      Wed, 07 Jul 2021 23:18:37 +0900
-    Ready:          True
-    Restart Count:  0
-    Environment:
-      MYSQL_SERVICE_HOST:  demo-mysql
-    Mounts:
-      /var/run/secrets/kubernetes.io/serviceaccount from default-token-45z5x (ro)
-Conditions:
-  Type              Status
-  Initialized       True
-  Ready             True
-  ContainersReady   True
-  PodScheduled      True
-Volumes:
-  default-token-45z5x:
-    Type:        Secret (a volume populated by a Secret)
-    SecretName:  default-token-45z5x
-    Optional:    false
-QoS Class:       BestEffort
-Node-Selectors:  <none>
-Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
-                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
-Events:
-  Type    Reason          Age   From               Message
-  ----    ------          ----  ----               -------
-  Normal  Scheduled       17m   default-scheduler  Successfully assigned developer-advocate/demo-app-5c74fc466f-4jhmr to worker2.ocp4.cloud.com
-  Normal  AddedInterface  17m   multus             Add eth0 [10.131.0.143/23]
-  Normal  Pulling         17m   kubelet            Pulling image "jonggyoukim/member-app"
-  Normal  Pulled          17m   kubelet            Successfully pulled image "jonggyoukim/member-app" in 4.571370048s
-  Normal  Created         17m   kubelet            Created container demo-app
-  Normal  Started         17m   kubelet            Started container demo-app
+  IP:           10.131.0.143  
 ~~~
 
 
@@ -437,10 +371,18 @@ demo-app   demo-app-developer-advocate.apps.ocp4.cloud.com          demo-app   8
 
 LoadBalancer에서 제공하는 External IP로 Service를 접근 가능합니다.
 이는 yaml 파일에서 `type: LoadBalancer` 로 정의하면 됩니다.
+~~~yaml
+...
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: demo-app
+  type: LoadBalancer
+~~~
 
-하지만 LoadBalancer가 쿠버네티스 클러스터에 포함되지 않으면 External IP를 부여받지 못해서 서비스를 할 수 없을지도 모릅니다.
-
-아래와 같이 Service의 상태가 `EXTERNAL-IP`부분에서 `<pending>`으로 되어 있는 상태는 LoadBalancer가 없어 현재 IP를 부여받지 못하고 있는 상태입니다.
+하지만 LoadBalancer가 쿠버네티스 클러스터에 포함되지 않으면 External IP를 부여받지 못해서 서비스를 할 수 없으며 아래와 같이 Service의 상태가 `EXTERNAL-IP`부분에서 `<pending>`으로 됩니다.
 
 ~~~
 $ kubectl get svc demo-app
@@ -448,6 +390,7 @@ $ kubectl get svc demo-app
 NAME       TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
 demo-app   LoadBalancer   172.30.112.154   <pending>     8080:31130/TCP   4m13s
 ~~~
+이런 경우는 `type: LoadBalancer`을 사용하지 않아야 합니다.
 
 ---
 
