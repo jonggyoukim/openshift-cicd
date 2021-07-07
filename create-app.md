@@ -1,4 +1,4 @@
-# Create Application
+# 애플리케이션 작성하기
 
 데모로 사용할 애플리케이션은 다음과 같은 애플리케이션입니다.
 
@@ -81,21 +81,36 @@ mysql을 데이터베이스로 사용하고 node로 만들어진 간단한 애�
     docker login
     ~~~
 
-1. MySQL 실행
 
-    컨테이너로 수행되는 MySQL에서 데이터를 영구저장 하기 위해서는 볼륨에 저장을 해야 하나, 별도의 볼륨 지정 없이 테스트를 위해서 컨테이너를 안에 데이터를 저장하도록 합니다.
+1. Docker Network 생성
+
+    애플리케이션을 컨테이너로 만들면 컨테이너간 통신을 위해서 Docker Network가 필요합니다. 다음 절차에서 애플리케이션을 컨테이너로 테스트 하기 때문에 미리 아래의 MySQL을 네트워크에 포함시키기 위하여 미리 Docker Network를 만듭니다.
 
     ~~~sh
-    docker run --name mydb -e MYSQL_ROOT_PASSWORD=mypassword -p 3306:3306 -d mysql:5.6
+    docker network create mynet
     ~~~
 
-    잘 수행되고 있는지 검사합니다.
+1. MySQL 실행
+
+    컨테이너로 실행되는 MySQL에서 데이터를 영구저장 하기 위해서는 볼륨에 저장을 해야 하나, 별도의 볼륨 지정 없이 테스트를 위해서 컨테이너를 안에 데이터를 저장하도록 합니다.  
+
+    - 컨테이너 이름 : mydb
+    - 컨테이너 네트워크 : mynet
+    - MySQL 루트 패스워드 : mypassword
+    - 호스트포트:컨테이너포트 : 3306:3306
+    - 백그라운드로 실행
+
+    ~~~sh
+    docker run --name mydb --network mynet -e MYSQL_ROOT_PASSWORD=mypassword -p 3306:3306 -d mysql:5.6
+    ~~~
+
+    잘 실행되고 있는지 검사합니다.
 
     ~~~
     docker ps
     ~~~
 
-    다음과 같은 결과로 잘 수행되고 있음을 알 수 있습니다.
+    다음과 같은 결과로 잘 실행되고 있음을 알 수 있습니다.
     ~~~
     CONTAINER ID   IMAGE       COMMAND                  CREATED         STATUS         PORTS      NAMES
     316762d86e96   mysql:5.6   "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes   3306/tcp   mydb
@@ -109,12 +124,12 @@ mysql을 데이터베이스로 사용하고 node로 만들어진 간단한 애�
     docker exec -it mydb /bin/sh
     ~~~
 
-    컨테이너의 */bin/sh* 이 실행되는 것이며, 프롬프트 `'#'` 이 보이면 다음과 같이 입력한다.
+    컨테이너의 */bin/sh* 이 실행되는 것이며, 프롬프트 `'#'` 이 보이면 다음과 같이 입력합니다.
     ~~~
     mysql -u root -p
     ~~~
 
-    `Enter password:` 에는 **"mypassword"** 를 입력하면 다음과 같이 로그인 되었다.
+    `Enter password:` 에는 **"mypassword"** 를 입력하면 다음과 같이 로그인 됩니다.
     ~~~
     Welcome to the MySQL monitor.  Commands end with ; or \g.
     Your MySQL connection id is 7
@@ -131,7 +146,7 @@ mysql을 데이터베이스로 사용하고 node로 만들어진 간단한 애�
     mysql> 
     ~~~
 
-    이제 애플리케이션이 필요로 하는 데이터베이스, 사용자 정보, 테이블을 만든다. 아래에 있는 명령을 복사하여 수행한다.
+    이제 애플리케이션이 필요로 하는 데이터베이스, 사용자 정보, 테이블을 만든다. 아래에 있는 명령을 복사하여 실행합니다.
     ~~~sql
     CREATE USER 'test'@'%' IDENTIFIED BY 'Welcome1';
 
@@ -181,16 +196,24 @@ mysql을 데이터베이스로 사용하고 node로 만들어진 간단한 애�
 
     이제 http://localhost:8080 으로 접속을 해 봅니다.
 
-    ![](./images/demo-app-screenshot-1.png)
+    ![](./images/local-member-app1.png)
 
-    ![](./images/demo-app-screenshot-2.png)
+    ![](./images/local-member-app2.png)
     
-    ![](./images/demo-app-screenshot-3.png)
+    ![](./images/local-member-app3.png)
 
+    주의깊게 볼 항목은 화면 중앙의 
+    ~~~
+    Version : v1.0 , IP Address : 10.208.192.120
+    ~~~
+    부분으로 현재 IP는 `10.208.192.120`로 로컬 컴퓨터의 IP를 나타내고 있습니다.
 
-이상 로컬에서 애플리케이션 작성을 완료하였습니다.
+---
+
+이상 애플리케이션 작성을 완료하였습니다.
+
+다음은 애플리케이션을 컨테이너 이미지로 만들어 보겠습니다. 
 
 <FORM> 
-<INPUT type="button" value="Go back" onClick="history.back()"> 
+<INPUT type="button" value="첫 화면으로" onClick="history.back()">
 </FORM>
---
