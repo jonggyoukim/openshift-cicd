@@ -72,23 +72,25 @@ MySQL을 데이터베이스로 사용하고 Node.js로 만들어진 간단한 �
 
     MySQL은 로컬에 설치하지 않고 컨테이너로 띄울 것이며 이를 위하여 Docker를 사용합니다.
 
-## Docker 로그인
+## Docker
 
-컨테이너 이미지를 받기 위해서 먼저 docker hub에 로그인 합니다.
-만약 아이디/패스워드가 없으면 hub.docker.com 에서 만듭니다.
+1. Docker 로그인
 
-~~~sh
-docker login
-~~~
+    컨테이너 이미지를 받기 위해서 먼저 docker hub에 로그인 합니다.
+    만약 아이디/패스워드가 없으면 hub.docker.com 에서 만듭니다.
+
+    ~~~sh
+    docker login
+    ~~~
 
 
-## Docker Network 생성
+1. Docker Network 생성
 
-애플리케이션을 컨테이너로 만들면 컨테이너간 통신을 위해서 Docker Network가 필요합니다. 다음 절차에서 애플리케이션을 컨테이너로 테스트 하기 때문에 미리 아래의 MySQL을 네트워크에 포함시키기 위하여 미리 Docker Network를 만듭니다.
+    애플리케이션을 컨테이너로 만들면 컨테이너간 통신을 위해서 Docker Network가 필요합니다. 다음 절차에서 애플리케이션을 컨테이너로 테스트 하기 때문에 미리 아래의 MySQL을 네트워크에 포함시키기 위하여 미리 Docker Network를 만듭니다.
 
-~~~sh
-docker network create mynet
-~~~
+    ~~~sh
+    docker network create mynet
+    ~~~
 
 ## MySQL
 
