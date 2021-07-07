@@ -26,11 +26,10 @@
 
     본 세션에서는 docker.io를 사용하기 위해서 docker.io에 로그인이 필요합니다.
 
-    >docker.io에서 아이디를 새로 만들 수 있습니다. 아이디를 새로 만드셨다면 반드시 email을 확인하셔서 검증하십시오.
-
     ~~~sh
     docker login
     ~~~
+    >docker.io에서 아이디를 새로 만들 수 있습니다. 아이디를 새로 만드셨다면 반드시 email을 확인하셔서 검증하십시오.
 
 
 1. docker push
@@ -325,31 +324,30 @@ cd yaml
 
 1. port forward
 
-  port-forward를 통해서 localhost의 port로 Pod의 port로 접근가능하게 합니다.  
-  ~~~kubectl
-  $ kubectl port-forward demo-app-5c74fc466f-4jhmr 8080:8080
+    port-forward를 통해서 localhost의 port로 Pod의 port로 접근가능하게 합니다.  
+    ~~~kubectl
+    $ kubectl port-forward demo-app-5c74fc466f-4jhmr 8080:8080
 
-  Forwarding from 127.0.0.1:8080 -> 8080
-  Forwarding from [::1]:8080 -> 8080
-  ~~~
+    Forwarding from 127.0.0.1:8080 -> 8080
+    Forwarding from [::1]:8080 -> 8080
+    ~~~
 
 1. 애플리케이션 접근
 
-  웹브라우저에서 http://localhost:8080 으로 접속해 봅니다.
+    웹브라우저에서 http://localhost:8080 으로 접속해 봅니다.
 
-  ![](./images/kubernetes-member-app.png)
+    ![](./images/kubernetes-member-app.png)
 
-  현재 IP가 10.131.0.143으로 나오는데, 이는 Pod가 부여받은 IP를 나타내고 있습니다.
+    현재 IP가 10.131.0.143으로 나오는데, 이는 Pod가 부여받은 IP를 나타내고 있습니다.
 
-  실제 Pod의 IP를 살펴보려면 다음과 같이 확인 할 수 있습니다.
-  ~~~sh
-  $ kubectl describe pod demo-app-5c74fc466f-4jhmr | grep IP
+    실제 Pod의 IP를 살펴보려면 다음과 같이 확인 할 수 있습니다.
+    ~~~sh
+    $ kubectl describe pod demo-app-5c74fc466f-4jhmr | grep IP
 
-  IP:           10.131.0.143
-  IPs:
-    IP:           10.131.0.143  
-  ~~~
-
+    IP:           10.131.0.143
+    IPs:
+      IP:           10.131.0.143  
+    ~~~
 
 ### OpenShift Route 접근
 
