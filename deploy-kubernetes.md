@@ -208,6 +208,12 @@ $ kubectl apply -f service-mysql.yaml
 service/demo-mysql configured
 ~~~
 
+OpenShift의 브라우저에서 Console에서는 다음과 같이 정보를 볼 수 있습니다.
+
+![](./images/openshift-demo-mysql-1.png)
+
+![](./images/openshift-demo-mysql-2.png)
+
 
 ## 애플리케이션 배포하기
 
@@ -275,10 +281,18 @@ Connected to database
 ~~~
 
 
-## 애플리케이션 접속
+OpenShift의 브라우저에서 Console에서는 다음과 같이 정보를 볼 수 있습니다.
+
+![](./images/openshift-demo-app-1.png)
+
+![](./images/openshift-demo-app-2.png)
 
 
-port-forward를 통해서 localhost의 port로 pod의 port로 접근가능하게 합니다.  
+## 애플리케이션 접근
+
+### kubectl port-forward 로 접근
+
+port-forward를 통해서 localhost의 port로 Pod의 port로 접근가능하게 합니다.  
 ~~~kubectl
 $ kubectl port-forward demo-app-5c74fc466f-4jhmr 8080:8080
 
@@ -367,29 +381,80 @@ Events:
   Normal  Started         17m   kubelet            Started container demo-app
 ~~~
 
+
+### OpenShift Route 접근
+OpenShift에서는 애플리케이션을 외부로 서비스 하기 위하여 Route라는 CRS를 제공합니다.
+OpenShift Route는 www.example.com과 같이 외부에서 연결할 수있는 호스트 이름을 제공하여 서비스를 노출하는 방법입니다. 외부 클라이언트가 애플리케이션에 도달 할 수 있도록 Serice name으로 명명된 연결을 제공합니다.
+
+아래는 애플리케이션의 Service 에 대한 service-app.yaml 입니다.
+~~~
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-app
+  labels:
+    app: demo-app
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: demo-app
+~~~
+
+
+먼저 Service를 생성합니다.
 ~~~
 $ kubectl apply -f service-app.yaml
 
 service/demo-app created
 ~~~
 
-~~~
-$ kubectl get svc demo-app
 
-NAME       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
-demo-app   ClusterIP   172.30.125.92   <none>        8080/TCP   38s
-~~~
-
-
+그리고 Route를 생성합니다.
 ~~~
 $ oc expose svc/demo-app
 
 route.route.openshift.io/demo-app exposed
 ~~~
 
+생성된 Route의 HOST를 확인합니다.
 ~~~
 $ oc get route demo-app
 
 NAME       HOST/PORT                                         PATH   SERVICES   PORT   TERMINATION   WILDCARD
 demo-app   demo-app-developer-advocate.apps.ocp4.cloud.com          demo-app   8080                 None
 ~~~
+
+브라우저로 http://demo-app-developer-advocate.apps.ocp4.cloud.com 에 접속합니다.
+
+![](./images/openshift-member-app-1.png)
+
+동일한 Pod을 접근할 수 있음을 알 수 있습니다.
+
+
+## External IP 로 접근
+
+LoadBalancer에서 제공하는 External IP로 Service를 접근 가능합니다.
+이는 yaml 파일에서 `type: LoadBalancer` 로 정의하면 됩니다.
+
+하지만 LoadBalancer가 쿠버네티스 클러스터에 포함되지 않으면 External IP를 부여받지 못해서 서비스를 할 수 없을지도 모릅니다.
+
+아래와 같이 Service의 상태가 `EXTERNAL-IP`부분에서 `<pending>`으로 되어 있는 상태는 LoadBalancer가 없어 현재 IP를 부여받지 못하고 있는 상태입니다.
+
+~~~
+$ kubectl get svc demo-app
+
+NAME       TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+demo-app   LoadBalancer   172.30.112.154   <pending>     8080:31130/TCP   4m13s
+~~~
+
+---
+
+여기까지 "애플리케이션을 쿠버네티스에 배포하기"를 완료하였습니다.
+
+다음은 자동화된 배포를 위한 CI/CD Pipeline 에 대해 알아보겠습니다.
+
+<FORM> 
+<INPUT type="button" value="첫 화면으로" onClick="history.back()">
+</FORM>

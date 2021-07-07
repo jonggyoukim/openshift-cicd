@@ -1,17 +1,17 @@
 # 애플리케이션 작성하기
 
-데모로 사용할 애플리케이션은 다음과 같은 애플리케이션입니다.
+데모로 사용할 애플리케이션은 다음과 같은 애플리케이션입니다.  
+MySQL을 데이터베이스로 사용하고 Node.js로 만들어진 간단한 애플리케이션입니다.
 
 ![](./images/local-member-app-1.png)
-
-mysql을 데이터베이스로 사용하고 node로 만들어진 간단한 애플리케이션입니다.
 
 ## 사전 요구사항
 - Docker
 - Node.js
 - Git
 
-## 로컬에서 애플리케이션 테스트
+
+## 애플리케이션
 
 1. 애플리케이션을 작성합니다. (기존 소스를 클론합니다.) 
 
@@ -72,27 +72,33 @@ mysql을 데이터베이스로 사용하고 node로 만들어진 간단한 애�
 
     MySQL은 로컬에 설치하지 않고 컨테이너로 띄울 것이며 이를 위하여 Docker를 사용합니다.
 
-1. Docker 로그인
+## Docker 로그인
 
-    컨테이너 이미지를 받기 위해서 먼저 docker hub에 로그인 합니다.
-    만약 아이디/패스워드가 없으면 hub.docker.com 에서 만듭니다.
+컨테이너 이미지를 받기 위해서 먼저 docker hub에 로그인 합니다.
+만약 아이디/패스워드가 없으면 hub.docker.com 에서 만듭니다.
 
-    ~~~sh
-    docker login
-    ~~~
+~~~sh
+docker login
+~~~
 
 
-1. Docker Network 생성
+## Docker Network 생성
 
-    애플리케이션을 컨테이너로 만들면 컨테이너간 통신을 위해서 Docker Network가 필요합니다. 다음 절차에서 애플리케이션을 컨테이너로 테스트 하기 때문에 미리 아래의 MySQL을 네트워크에 포함시키기 위하여 미리 Docker Network를 만듭니다.
+애플리케이션을 컨테이너로 만들면 컨테이너간 통신을 위해서 Docker Network가 필요합니다. 다음 절차에서 애플리케이션을 컨테이너로 테스트 하기 때문에 미리 아래의 MySQL을 네트워크에 포함시키기 위하여 미리 Docker Network를 만듭니다.
 
-    ~~~sh
-    docker network create mynet
-    ~~~
+~~~sh
+docker network create mynet
+~~~
+
+## MySQL
 
 1. MySQL 실행
 
     컨테이너로 실행되는 MySQL에서 데이터를 영구저장 하기 위해서는 볼륨에 저장을 해야 하나, 별도의 볼륨 지정 없이 테스트를 위해서 컨테이너를 안에 데이터를 저장하도록 합니다.  
+
+    ~~~sh
+    docker run --name mydb --network mynet -e MYSQL_ROOT_PASSWORD=mypassword -p 3306:3306 -d mysql:5.6
+    ~~~
 
     - 컨테이너 이름 : mydb
     - 컨테이너 네트워크 : mynet
@@ -100,9 +106,6 @@ mysql을 데이터베이스로 사용하고 node로 만들어진 간단한 애�
     - 호스트포트:컨테이너포트 : 3306:3306
     - 백그라운드로 실행
 
-    ~~~sh
-    docker run --name mydb --network mynet -e MYSQL_ROOT_PASSWORD=mypassword -p 3306:3306 -d mysql:5.6
-    ~~~
 
     잘 실행되고 있는지 검사합니다.
 
@@ -174,6 +177,8 @@ mysql을 데이터베이스로 사용하고 node로 만들어진 간단한 애�
     exit
     ~~~
 
+## 애플리케이션
+
 1. 애플리케이션 실행
 
     애플리케이션을 다시 실행 해 봅니다.
@@ -194,6 +199,8 @@ mysql을 데이터베이스로 사용하고 node로 만들어진 간단한 애�
     Connected to database
     ~~~
 
+1. 애플리케이션 접근
+
     이제 http://localhost:8080 으로 접속을 해 봅니다.
 
     ![](./images/local-member-app-1.png)
@@ -210,7 +217,7 @@ mysql을 데이터베이스로 사용하고 node로 만들어진 간단한 애�
 
 ---
 
-이상 "애플리케이션 작성하기" 를 완료하였습니다.
+여기까지 "애플리케이션 작성하기" 를 완료하였습니다.
 
 다음은 애플리케이션을 컨테이너 이미지로 만들어 보겠습니다. 
 
