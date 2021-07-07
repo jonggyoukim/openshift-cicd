@@ -2,7 +2,7 @@
 
 데모로 사용할 애플리케이션은 다음과 같은 애플리케이션입니다.
 
-![](./images/local-member-app1.png)
+![](./images/local-member-app-1.png)
 
 mysql을 데이터베이스로 사용하고 node로 만들어진 간단한 애플리케이션입니다.
 
@@ -196,17 +196,17 @@ mysql을 데이터베이스로 사용하고 node로 만들어진 간단한 애�
 
     이제 http://localhost:8080 으로 접속을 해 봅니다.
 
-    ![](./images/local-member-app1.png)
+    ![](./images/local-member-app-1.png)
 
-    ![](./images/local-member-app2.png)
+    ![](./images/local-member-app-2.png)
     
-    ![](./images/local-member-app3.png)
+    ![](./images/local-member-app-3.png)
 
     주의깊게 볼 항목은 화면 중앙의 
     ~~~
-    Version : v1.0 , IP Address : 10.208.192.120
+    Version : v1.0 , IP Address : 192.168.50.37
     ~~~
-    부분으로 현재 IP는 `10.208.192.120`로 로컬 컴퓨터의 IP를 나타내고 있습니다.
+    부분으로 현재 IP는 `192.168.50.37`로 로컬 컴퓨터의 IP를 나타내고 있습니다.
 
 ---
 
